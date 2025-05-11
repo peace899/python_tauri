@@ -1,0 +1,19 @@
+{
+  "$schema": "../gen/schemas/capabilities.json",
+  "identifier": "main",
+  "permissions": [
+    "dialog:default",
+    "core:event:allow-listen",
+    "core:event:default",
+    "core:app:allow-default-window-icon"
+  ],
+  "windows": [
+    "*"
+  ],
+  "remote": {
+    "urls": [
+      "http://*",
+      "https://*"
+    ]
+  }
+}

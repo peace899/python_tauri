@@ -1,0 +1,1 @@
+{"main":{"identifier":"main","description":"","remote":{"urls":["http://*","https://*"]},"local":true,"windows":["*"],"permissions":["dialog:default","core:event:allow-listen","core:event:default","core:app:allow-default-window-icon"]}}
