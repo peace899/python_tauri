@@ -3,11 +3,7 @@ use pyo3::types::PyString;
 use serde_json::Value;
 use tauri::{image::Image, Emitter, Listener, Manager};
 use std::{
-    fs,
-    path::PathBuf,
-    str::FromStr,
-    collections::HashMap,
-    sync::Mutex,
+    collections::HashMap, fs, path::PathBuf, str::FromStr, sync::Mutex
 };
 use tauri::{AppHandle, Builder, WebviewWindowBuilder, Url};
 
@@ -15,7 +11,8 @@ mod python_utils;
 use python_utils::pyany_to_json_value;
 
 // Global state management
-mod globals {
+mod globals {    
+
     use super::*;
     use once_cell::sync::Lazy;
 
@@ -24,7 +21,7 @@ mod globals {
     static READY_CALLBACK: Lazy<Mutex<Option<Py<PyAny>>>> = Lazy::new(|| Mutex::new(None));
     static LISTENER_CALLBACK: Lazy<Mutex<Option<Py<PyAny>>>> = Lazy::new(|| Mutex::new(None));
     static PYCOMMANDS_HANDLER: Lazy<Mutex<HashMap<String, PyObject>>> = Lazy::new(|| Mutex::new(HashMap::new()));
-
+    
     pub fn app_handle() -> Option<AppHandle> {
         APP_HANDLE.lock().unwrap().clone()
     }
@@ -51,7 +48,6 @@ mod globals {
         * LISTENER_CALLBACK.lock().unwrap() = Some(callback);
     }
 
-
     pub fn ready_callback() -> Option<Py<PyAny>> {
         Python::with_gil(|py| {
             READY_CALLBACK.lock().unwrap().as_ref().map(|obj| obj.clone_ref(py))
@@ -73,6 +69,7 @@ mod globals {
                 .map(|py_any| py_any.clone_ref(py))
         })
     }
+
 }
 
 #[pyclass]
@@ -158,7 +155,7 @@ impl TauriApp {
 
     #[staticmethod]
     fn listen(py: Python, callback: PyObject) -> PyResult<()> {
-        globals::set_listener_callback(callback.clone_ref(py));
+        globals::set_listener_callback(callback.clone_ref(py));        
         Ok(())
     }
 
@@ -272,7 +269,7 @@ fn setup_app(app: &mut tauri::App, icon_path: Option<String>) -> Result<(), Box<
 
     // Listen for webview events
     app.listen("webview_emit", |event| {
-        log::debug!("Received event in Rust: {:?}", event);        
+        log::debug!("Received event in Rust: {:?}", event);         
         
         // Get listen callback
         if let Some(callback) = globals::listener_callback() {            
@@ -310,6 +307,7 @@ fn handle_py_command(args: Value) -> Result<Option<Value>, String> {
             .map_err(|e| format!("Failed to convert Python result: {}", e))
     })
 }
+
 
 /// A Python module implemented in Rust.
 #[pymodule]
